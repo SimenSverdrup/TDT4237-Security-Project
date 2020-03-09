@@ -1,3 +1,5 @@
+import os
+
 import web
 from views.forms import register_form
 import models.register
@@ -39,11 +41,33 @@ class Register:
         # Check if user exists
         if models.user.get_user_id_by_name(data.username):
             return render.register(nav, register, "Invalid user, already exists.")
+        try:
+             smtp_server = os.getenv("smtp server") +":25"
+             web.config.smtp_server = smtp_server
 
+        except:
+            smtp_server = "molde.idi.ntnu.no:25"
+            web.config.smtp_server = smtp_server
+
+        web.sendmail("beelance@stud.ntnu.no", data.email, "Test", "Email verification")
         models.register.set_user(data.username, 
             hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(), 
             data.full_name, data.company, data.email, data.street_address, 
             data.city, data.state, data.postal_code, data.country)
-        
+
         return render.register(nav, register_form, "User registered!")
+
+        #def SendMail(self):
+         #  try:
+         #       smtp_server = os.getenv("smtp server") +":25"
+          #      web.config.smtp_server = smtp_server
+
+         #  except:
+          #     smtp_server = "molde.idi.ntnu.no:25"
+          #     web.config.smtp_server = smtp_server
+
+        #web.sendmail("beelance@stud.ntnu.no", "warsamem@stud.ntnu.no", "Test", "Email verification")
+
+
+
 
