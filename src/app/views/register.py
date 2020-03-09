@@ -49,7 +49,7 @@ class Register:
             smtp_server = "molde.idi.ntnu.no:25"
             web.config.smtp_server = smtp_server
 
-        web.sendmail("beelance@stud.ntnu.no", data.email, "Test", "Email verification")
+        web.sendmail("beelance@stud.ntnu.no", "warsamem@stud.ntnu.no", "Test", "Email verification")
         models.register.set_user(data.username, 
             hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(), 
             data.full_name, data.company, data.email, data.street_address, 
