@@ -42,7 +42,7 @@ class Register:
         if models.user.get_user_id_by_name(data.username):
             return render.register(nav, register, "Invalid user, already exists.")
         try:
-             smtp_server = os.getenv("smtp server") +":25"
+             smtp_server = os.getenv("smtp server") + " :25"
              web.config.smtp_server = smtp_server
 
         except:
