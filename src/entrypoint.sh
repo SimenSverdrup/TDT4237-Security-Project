@@ -23,6 +23,10 @@ content_server=$content_server"    location $USE_STATIC_URL {\n"
 content_server=$content_server"        alias $USE_STATIC_PATH;\n"
 content_server=$content_server'    }\n'
 content_server=$content_server'}\n'
+add_header x-frame-options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block";
+add_header X-Content-Type-Options nosniff;
+
 
 
 # Configuration skeleton for using SSL
