@@ -24,7 +24,6 @@ content_server=$content_server"        alias $USE_STATIC_PATH;\n"
 content_server=$content_server'    }\n'
 content_server=$content_server'}\n'
 
-
 # Configuration skeleton for using SSL
 # https://nginx.org/en/docs/http/configuring_https_servers.html
 #content_server=$content_server'server {\n'
