@@ -51,14 +51,19 @@ class Register:
             smtp_server = "molde.idi.ntnu.no:25"
             web.config.smtp_server = smtp_server
 
-        models.register.set_user(data.username,
-                                 hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(),
-                                 data.full_name, data.company, data.email, data.street_address,
-                                 data.city, data.state, data.postal_code, data.country)
+        #models.register.set_user(data.username,
+        #                         hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(),
+        #                         data.full_name, data.company, data.email, data.street_address,
+        #                         data.city, data.state, data.postal_code, data.country)
 
-        token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(25)])
-        auth_link = 'localhost:8056/confirmation/?id=' + token
+        token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(15)])
+        auth_link = 'localhost:8056/confirmation'
         web.sendmail("beelance@ntnu.no", data.email, "Email verification",
-                     "Click the link to verify your email: " + auth_link)
+                     "Click the link to verify your email and set password: " + auth_link +
+                     "\nUse temporary password: " + token)
+
+        models.register.set_user(data.username, token,
+                                data.full_name, data.company, data.email, data.street_address,
+                                data.city, data.state, data.postal_code, data.country)
 
         return render.register(nav, register_form, "User registered!")

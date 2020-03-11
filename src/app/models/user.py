@@ -100,6 +100,21 @@ def match_user(username, password):
         db.close()
     return user
 
-        
+
+def change_password(username, new_password):
+    db.connect()
+    cursor = db.cursor()
+    query = ("UPDATE users SET password = PASSWORD(\'" + new_password + "\') WHERE username = \"" + username + "\"")
+
+    try:
+        cursor.execute(query)
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+
+    return True
     
 

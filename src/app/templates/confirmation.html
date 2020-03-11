@@ -1,4 +1,4 @@
-$def with (nav, message)
+$def with (nav, confirmation_form, message)
 
 <head>
     <title>Beelance2</title>
@@ -12,8 +12,13 @@ $def with (nav, message)
 
     $:nav
 
-    <p>$:message</p>
+    <h2>Register user!</h2>
 
-    <img src="static/honeybee.png" alt="Honeybee">
+    <form method="POST">
+        $:confirmation_form.render()
+    </form>
 
+    <p>$message</p>
 </body>
+
+<footer></footer>
