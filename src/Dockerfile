@@ -1,8 +1,13 @@
 FROM tiangolo/uwsgi-nginx:python3.7
 
+RUN touch /etc/nginx/conf.d/costum.conf
+RUN echo 'add_header X-Frame-Options DENY;' >> /etc/nginx/conf.d/costum.conf
+RUN echo 'add_header X-Content-Type-Options nosniff;' >> /etc/nginx/conf.d/costum.conf
+
 # Expose the web-server local port
 ENV LISTEN_PORT 8080
 EXPOSE 8080
+
 
 # Define environment
 COPY ./app /app
