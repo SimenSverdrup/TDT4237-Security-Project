@@ -6,6 +6,8 @@ import models.register
 import models.user
 from views.utils import get_nav_bar
 import hashlib
+import random
+import string
 import re
 
 # Get html templates
@@ -42,32 +44,21 @@ class Register:
         if models.user.get_user_id_by_name(data.username):
             return render.register(nav, register, "Invalid user, already exists.")
         try:
-             smtp_server = os.getenv("smtp server") + " :25"
-             web.config.smtp_server = smtp_server
+            smtp_server = "molde.idi.ntnu.no:25" #os.getenv("smtp server") + " :25"
+            web.config.smtp_server = smtp_server
 
         except:
             smtp_server = "molde.idi.ntnu.no:25"
             web.config.smtp_server = smtp_server
 
-        web.sendmail("beelance@stud.ntnu.no", "warsamem@stud.ntnu.no", "Test", "Email verification")
-        models.register.set_user(data.username, 
-            hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(), 
-            data.full_name, data.company, data.email, data.street_address, 
-            data.city, data.state, data.postal_code, data.country)
+        models.register.set_user(data.username,
+                                 hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest(),
+                                 data.full_name, data.company, data.email, data.street_address,
+                                 data.city, data.state, data.postal_code, data.country)
+
+        token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(25)])
+        auth_link = 'localhost:8056/confirmation/?id=' + token
+        web.sendmail("beelance@ntnu.no", data.email, "Email verification",
+                     "Click the link to verify your email: " + auth_link)
 
         return render.register(nav, register_form, "User registered!")
-
-        #def SendMail(self):
-         #  try:
-         #       smtp_server = os.getenv("smtp server") +":25"
-          #      web.config.smtp_server = smtp_server
-
-         #  except:
-          #     smtp_server = "molde.idi.ntnu.no:25"
-          #     web.config.smtp_server = smtp_server
-
-        #web.sendmail("beelance@stud.ntnu.no", "warsamem@stud.ntnu.no", "Test", "Email verification")
-
-
-
-

@@ -27,6 +27,7 @@ urls = (
     '/login', 'Login',
     '/logout', 'Logout',
     '/register', 'Register',
+    '/confirmation', 'Confirmation',
     '/new_project', 'New_project',
     '/open_projects', 'Open_projects',
     '/project', 'Project',
