@@ -57,7 +57,7 @@ class Login():
         session.userid = userid
         if remember:
             rememberme = self.rememberme()
-            web.setcookie('remember', rememberme , 300000000)
+            web.setcookie('remember', rememberme, 300000000)
 
     def check_rememberme(self):
         """

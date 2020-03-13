@@ -36,9 +36,15 @@ register_form = form.Form(
 confirmation_form = form.Form(
     form.Textbox("username", not_empty, description="Username"),
     form.Textbox("temporary_pw", not_empty, description="Temporary password"),
-    form.Textbox("new_pw1", not_empty, description="New password"),
-    form.Textbox("new_pw2", not_empty, description="Repeat new password"),
-    form.Button("submit", type="submit", html="Submit")
+    form.Textbox("new_pw1", vpass, description="New password"),
+    form.Textbox("new_pw2", vpass, description="Repeat new password"),
+    form.Button("Submit", type="submit", description="Submit")
+)
+
+# Define the forgot password form
+forgot_password_form = form.Form(
+    form.Textbox("username", not_empty, description="Username"),
+    form.Button("Submit", type="submit", description="Submit")
 )
 
 # Define the project view form

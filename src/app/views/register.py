@@ -57,13 +57,14 @@ class Register:
         #                         data.city, data.state, data.postal_code, data.country)
 
         token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(15)])
-        auth_link = 'localhost:8056/confirmation'
-        web.sendmail("beelance@ntnu.no", data.email, "Email verification",
-                     "Click the link to verify your email and set password: " + auth_link +
+        auth_link = 'http://localhost:8056/confirmation'
+        web.sendmail("beelance@ntnu.no", data.email, "Email verification/password reset",
+                     "Click the link to verify your email and confirm password: " + auth_link +
                      "\nUse temporary password: " + token)
 
         models.register.set_user(data.username, token,
                                 data.full_name, data.company, data.email, data.street_address,
                                 data.city, data.state, data.postal_code, data.country)
+        print("token: " + token)
 
-        return render.register(nav, register_form, "User registered!")
+        return render.register(nav, register_form, "User registered! Check your email to complete your registration.")
