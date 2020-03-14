@@ -22,6 +22,7 @@ class Confirmation:
         session = web.ctx.session
         nav = get_nav_bar(session)
         data = web.input()
+
         if models.user.match_user(data.username, data.temporary_pw):
             if data.new_pw1 == data.new_pw2:
                 new_pw_encrypted = hashlib.md5(b'TDT4237' + data.new_pw1.encode('utf-8')).hexdigest()
@@ -30,4 +31,4 @@ class Confirmation:
             else:
                 return render.confirmation(nav, confirmation_form, "New passwords not equal!")
         else:
-            return render.confirmation(nav, confirmation_form, "Incorrect temporary password!")
+            return render.confirmation(nav, confirmation_form, "Incorrect username or temporary password!")

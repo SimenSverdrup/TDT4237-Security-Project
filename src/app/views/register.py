@@ -58,6 +58,7 @@ class Register:
 
         token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(15)])
         auth_link = 'http://localhost:8056/confirmation'
+
         web.sendmail("beelance@ntnu.no", data.email, "Email verification/password reset",
                      "Click the link to verify your email and confirm password: " + auth_link +
                      "\nUse temporary password: " + token)

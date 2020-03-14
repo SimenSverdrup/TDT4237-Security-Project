@@ -104,9 +104,8 @@ def match_user(username, password):
 def change_password(username, new_password):
     db.connect()
     cursor = db.cursor()
-    query = ("UPDATE users SET password=PASSWORD('"
-             + new_password + "') WHERE username='"
-             + username + "'")
+
+    query = "SET SQL_SAFE_UPDATES = 0"
 
     try:
         cursor.execute(query)
@@ -117,12 +116,31 @@ def change_password(username, new_password):
         cursor.close()
         db.close()
 
-    ################# TESTING IF PASSWORD IS ACTUALLY UPDATED ##################
-    print(query)
+
+
+    userid = get_user_id_by_name(username)
     db.connect()
     cursor = db.cursor()
 
-    query = ("SELECT password from users WHERE username =\"" + username + "\"")
+    query = ("UPDATE users SET password=PASSWORD(\"" + new_password + "\") WHERE userid=" + str(userid))
+    print(query)
+
+    try:
+        cursor.execute(query)
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+
+
+
+    ################# TESTING IF PASSWORD IS ACTUALLY UPDATED ##################
+    db.connect()
+    cursor = db.cursor()
+
+    query = ("SELECT password FROM users WHERE username =\"" + username + "\"")
     pw = ''
     try:
         cursor.execute(query)
