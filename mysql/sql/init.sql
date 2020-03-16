@@ -84,9 +84,9 @@ insert into project_category values (NULL, "Grocery shopping");
 
 
 /*
-Create default database user 
+Create default database user
 */
 
-CREATE USER 'root'@'10.5.0.6' IDENTIFIED BY 'root';
+CREATE USER 'root'@'10.5.0.6' IDENTIFIED BY 'jeghardetbra';
 GRANT ALL PRIVILEGES ON db.* TO 'root'@'10.5.0.6';
 

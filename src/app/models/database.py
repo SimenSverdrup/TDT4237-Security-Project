@@ -11,7 +11,7 @@ preconfigured docker container address use the Docker address. The default port 
 """
 db = mysql.connector.connect(
     user='root', 
-    password='root',
+    password='jeghardetbra',
     host='10.' + groupid + '.0.5',   # Docker address
     #host='0.0.0.0',    # Local address
     database='db'
