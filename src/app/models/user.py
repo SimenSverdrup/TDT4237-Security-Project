@@ -22,6 +22,7 @@ def get_users():
         db.close()
     return users
 
+
 def get_user_id_by_name(username):
     """
     Get the id of the unique username
@@ -47,6 +48,7 @@ def get_user_id_by_name(username):
         db.close()
     return userid
 
+
 def get_user_name_by_id(userid):
     """
     Get username from user id
@@ -70,6 +72,7 @@ def get_user_name_by_id(userid):
         cursor.close()
         db.close()
     return username
+
 
 def match_user(username, password):
     """
@@ -100,6 +103,30 @@ def match_user(username, password):
         db.close()
     return user
 
-        
-    
+
+def change_password(username, new_password):
+    """
+        Change password for username
+            :param username: The username
+            :param new_password: The new password
+    """
+    userid = get_user_id_by_name(username)
+
+    db.connect()
+    cursor = db.cursor()
+
+    query = ("UPDATE users SET password=\"" + new_password + "\" WHERE userid=" + str(userid))
+
+    try:
+        cursor.execute(query)
+        db.commit()
+    except mysql.connector.Error as err:
+        print("ERROR")
+        print("Failed executing query: {}".format(err))
+        cursor.fetchall()
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+
 

@@ -9,6 +9,8 @@ from views.open_projects import Open_projects
 from views.project import Project
 from views.index import Index
 from views.apply import Apply
+from views.confirmation import Confirmation
+from views.forgot_password import Forgot_password
 
 # Connect to smtp server, enables web.sendmail()
 try:
@@ -27,8 +29,10 @@ urls = (
     '/login', 'Login',
     '/logout', 'Logout',
     '/register', 'Register',
+    '/confirmation', 'Confirmation',
     '/new_project', 'New_project',
     '/open_projects', 'Open_projects',
+    '/forgot_password', 'Forgot_password',
     '/project', 'Project',
     '/apply', 'Apply',
 )

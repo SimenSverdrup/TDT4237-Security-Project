@@ -1,0 +1,22 @@
+$def with (nav, confirmation_form, message)
+
+<head>
+    <title>Beelance2</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
+    <link rel="shortcut icon" type="image/png" href="static/honeybee.png"/>
+
+</head>
+
+<body>
+
+    $:nav
+
+    <form method="POST">
+        $:confirmation_form.render()
+    </form>
+
+    <p>$message</p>
+</body>
+
+<footer></footer>

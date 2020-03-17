@@ -32,6 +32,7 @@ def set_user(username, password, full_name, company, email,
         password + "\", \"" + full_name + "\" , \"" + company + "\", \"" + 
         email + "\", \"" + street_address + "\", \"" + city + "\", \"" + 
         state  + "\", \"" + postal_code + "\", \"" + country + "\")")
+
     try:
         cursor.execute(query)
         db.commit()
