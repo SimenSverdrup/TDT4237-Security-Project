@@ -1,3 +1,5 @@
+import json
+
 import web
 from views.forms import login_form
 import models.user
@@ -57,7 +59,7 @@ class Login():
         session.userid = userid
         if remember:
             rememberme = self.rememberme()
-            web.setcookie('remember', rememberme, 300000000)
+            web.setcookie('remember', rememberme, 2629743)
 
     def check_rememberme(self):
         """
@@ -72,9 +74,9 @@ class Login():
             # Fetch the remember cookie and convert from string to bytes
             remember_hash = bytes(cookies.remember[2:][:-1], 'ascii')
             # Decode the hash
-            decode = base64.b64decode(remember_hash)
+            decode = base64.b64decode(remember_hash).decode('utf-8')
             # Load the decoded hash to receive the host signature and the username
-            username, sign = pickle.loads(decode)
+            username, sign = json.loads(decode)
         except AttributeError as e:
             # The user did not have the stored remember me cookie
             pass
@@ -93,7 +95,7 @@ class Login():
         """
         session = web.ctx.session
         creds = [ session.username, self.sign_username(session.username) ]
-        return base64.b64encode(pickle.dumps(creds))
+        return base64.b64encode(json.dumps(creds).encode('utf-8'))
 
     @classmethod
     def sign_username(self, username):

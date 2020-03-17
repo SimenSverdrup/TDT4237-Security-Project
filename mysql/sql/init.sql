@@ -76,7 +76,7 @@ CREATE TABLE task_files (
 * Initial data
 */
 
-insert into users values (NULL, "admin", "48bead1bb864138c2cafaf1bd41332ab", "Admin Modsen", "ntnu", 'mail@ntnu.no', "street", "trondheim", "trondheim", "1234", "norway");
+insert into users values (NULL, "admin", "db0d5d67aa805a7be1d05dcc02ca4263", "Admin Modsen", "ntnu", 'mail@ntnu.no', "street", "trondheim", "trondheim", "1234", "norway");
 
 insert into project_category values (NULL, "Gardening");
 insert into project_category values (NULL, "Programming");
@@ -84,9 +84,9 @@ insert into project_category values (NULL, "Grocery shopping");
 
 
 /*
-Create default database user 
+Create default database user
 */
 
-CREATE USER 'root'@'10.5.0.6' IDENTIFIED BY 'root';
+CREATE USER 'root'@'10.5.0.6' IDENTIFIED BY 'jeghardetbra';
 GRANT ALL PRIVILEGES ON db.* TO 'root'@'10.5.0.6';
 
