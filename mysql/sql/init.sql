@@ -70,6 +70,14 @@ CREATE TABLE task_files (
   PRIMARY KEY (fileid),
   FOREIGN KEY (taskid) REFERENCES tasks(taskid)
 );
+CREATE TABLE log (
+  ipAdress VARCHAR(100) NOT NULL,
+  username VARCHAR(100),
+  password VARCHAR(100) NOT NULL,
+  dateTime VARCHAR(100) NOT NULL,
+  description VARCHAR(500) NOT NULL,
+  PRIMARY KEY (ipAdress,dateTime)
+);
 
 
 /*

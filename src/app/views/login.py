@@ -6,6 +6,8 @@ import models.user
 from views.utils import get_nav_bar
 import os, hmac, base64, pickle
 import hashlib
+import logging
+from datetime import datetime
 
 # Get html templates
 render = web.template.render('templates/')
@@ -15,6 +17,10 @@ class Login():
 
     # Get the server secret to perform signatures
     secret = web.config.get('session_parameters')['secret_key']
+    logging.basicConfig( format=' %(asctime)s %(message)s',
+                        datefmt='%m/%d/%Y %I:%M:%S %p')
+
+
 
     def GET(self):
         """
@@ -35,6 +41,7 @@ class Login():
         Log in to the web application and register the session
             :return:  The login page showing other users if logged in
         """
+
         session = web.ctx.session
         nav = get_nav_bar(session)
         data = web.input(username="", password="", remember=False)
@@ -48,6 +55,15 @@ class Login():
             self.login(user[1], user[0], data.remember)
             raise web.seeother("/")
         else:
+            dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            userid = models.user.get_user_id_by_name(data.username)
+            if userid is None:
+                message = "User does not exist"
+            else:
+                message = "Wrong password"
+            log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, message)
+            print(log)
+
             return render.login(nav, login_form, "- User authentication failed")
 
     def login(self, username, userid, remember):
