@@ -22,6 +22,34 @@ def get_users():
         db.close()
     return users
 
+def set_logger(ipAdress, username, password, dateTime, description):
+    """
+    Retreive all registrered users from the database
+        :return: users
+    """
+    db.connect()
+    cursor = db.cursor()
+    query = f"INSERT INTO log VALUES ('{ipAdress}', '{username}', '{password}', '{dateTime}', '{description}')"
+    get_query = "Select * from log"
+
+    #query = 'INSERT INTO log values("105601", "warsa", "password", "dateTime", "description")'
+    try:
+        cursor.execute(query)
+        db.commit()
+        cursor.execute(get_query)
+        log = cursor.fetchall()
+
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        log = None
+        exit(1)
+
+    finally:
+        cursor.close()
+        db.close()
+    return log
+
+
 
 def get_user_id_by_name(username):
     """
