@@ -105,11 +105,17 @@ def match_user(username, password):
 
 
 def change_password(username, new_password):
+    """
+        Change password for username
+            :param username: The username
+            :param new_password: The new password
+    """
+    userid = get_user_id_by_name(username)
+
     db.connect()
     cursor = db.cursor()
 
-    userid = get_user_id_by_name(username)
-    query = ("UPDATE users SET password=PASSWORD(\"" + new_password + "\") WHERE userid=" + str(userid))
+    query = ("UPDATE users SET password=\"" + new_password + "\" WHERE userid=" + str(userid))
 
     try:
         cursor.execute(query)
@@ -122,6 +128,5 @@ def change_password(username, new_password):
     finally:
         cursor.close()
         db.close()
-
 
 

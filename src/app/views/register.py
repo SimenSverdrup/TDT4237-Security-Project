@@ -68,4 +68,5 @@ class Register:
                                 data.city, data.state, data.postal_code, data.country)
         print("token: " + token)
 
-        return render.register(nav, register_form, "User registered! Check your email to complete your registration.")
+        return render.register(nav, register_form, "User registered! Check your email to complete your registration. "
+                                                   "You will not be able to login until you validate your email.")

@@ -48,6 +48,7 @@ class Forgot_password:
                 # user exists in database
                 token = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(15)])
                 auth_link = 'http://localhost:8056/confirmation'
+                print(token)
 
                 models.user.change_password(data.username, token)
 
