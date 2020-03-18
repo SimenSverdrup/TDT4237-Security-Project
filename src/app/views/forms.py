@@ -133,14 +133,13 @@ def get_apply_form():
     Get the form used to add users to an application and apply
         :return: A form object
     """
-    users = get_users()
     apply_form = form.Form(
-        form.Dropdown("user_to_add", description="User", args=users),
+        #form.Dropdown("user_to_add", description="User", args=users),
+        form.Textbox("user_to_add", description="User", placeholder="username"),
         form.Button("add_user", type="submit", description="Add User", value="add_user", html="Add User"),
         form.Button("apply", type="submit", description="Apply", value="apply", html="Apply")
     )
     return apply_form
-
 def get_apply_permissions_form(identifier=0, read_permission="TRUE", write_permission="FALSE", modify_permission="FALSE", userid=None):
     """
     Get the form used to set permissions for each applicant
