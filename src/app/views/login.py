@@ -47,24 +47,52 @@ class Login():
         data = web.input(username="", password="", remember=False)
 
         # Validate login credential with database query
-        password_hash = hashlib.md5(b'TDT4237' + data.password.encode('utf-8')).hexdigest()
-        user = models.user.match_user(data.username, password_hash)
-        
-        # If there is a matching user/password in the database the user is logged in
-        if user:
-            self.login(user[1], user[0], data.remember)
-            raise web.seeother("/")
-        else:
-            dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-            userid = models.user.get_user_id_by_name(data.username)
-            if userid is None:
-                message = "User does not exist"
-            else:
-                message = "Wrong password"
-            log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, message)
-            print(log)
+        user = None
+        userid = models.user.get_user_id_by_name(data.username)
+        if userid:
+            salt = models.user.get_salt(data.username)
+            if len(salt) > 0:
+                password_hash = hashlib.sha512(salt.encode('utf-8') + data.password.encode('utf-8')).hexdigest() + salt
+                user = models.user.match_user(data.username, password_hash)
 
-            return render.login(nav, login_form, "- User authentication failed")
+        # Increment counter for wrong password if user exists but wrong password
+        dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        if userid and not user:
+            wrong_login_count = models.user.get_wrong_login_count(userid)
+            #making a log for every fail attempt
+            userid = models.user.get_user_id_by_name(data.username)
+            # if first time wrong password, initialize counter
+            if wrong_login_count is None:
+                 models.user.set_wrong_login_count(userid, 1, True)
+                 log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "Logging failed")
+                 return render.login(nav, login_form, "User authentication failed.")
+            #Check if max wrong login attempts is reached
+            elif wrong_login_count > 5:
+                log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "user blocked")
+                return render.login(nav, login_form, "You've entered the wrong password too many times. Account is blocked.")
+            else:
+                models.user.increment_wrong_login_count(userid)
+                log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "Logging failed")
+                return render.login(nav, login_form, "User authentication failed.")
+
+        # If there is a matching user/password in the database the user is logged in
+        elif userid and user:
+            if models.user.get_wrong_login_count(userid) is None or models.user.get_wrong_login_count(userid) <= 5:
+                models.user.set_wrong_login_count(userid, 0, False)  # Resets wrong pwd count
+                self.login(user[1], user[0], data.remember)
+                raise web.seeother("/")
+
+            else:
+                log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "account is blocked")
+                print(log)
+                return render.login(nav, login_form, "You've entered the wrong password too many times. Account is blocked.")
+        else:
+            log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "Logging failed")
+            return render.login(nav, login_form, "User authentication failed.")
+
+
+
+
 
     def login(self, username, userid, remember):
         """

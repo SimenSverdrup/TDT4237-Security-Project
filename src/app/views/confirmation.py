@@ -6,6 +6,8 @@ import models.user
 from views.utils import get_nav_bar
 from views.forms import confirmation_form
 import hashlib
+import random
+
 
 # Get html templates
 render = web.template.render('templates/')
@@ -25,8 +27,13 @@ class Confirmation:
 
         if models.user.match_user(data.username, data.temporary_pw):
             if data.new_pw1 == data.new_pw2:
-                new_pw_encrypted = hashlib.md5(b'TDT4237' + data.new_pw1.encode('utf-8')).hexdigest()
-
+                alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                chars = []
+                for i in range(5):
+                    chars.append(random.choice(alphabet))
+                salt = "".join(chars)
+                new_pw_encrypted = hashlib.sha512(salt.encode('utf-8') + data.new_pw1.encode('utf-8')).hexdigest()+salt
+                print(type(new_pw_encrypted))
                 models.user.change_password(data.username, new_pw_encrypted)
                 return render.confirmation(nav, confirmation_form, "Your email has been verified and password updated!")
             else:
