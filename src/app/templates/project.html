@@ -1,4 +1,4 @@
-$def with (nav, project_form, project, tasks, permissions, categories)
+$def with (nav, project_form, project, tasks, permissions, categories, message)
 
 <head>
     <title>Beelance2</title>
@@ -9,9 +9,8 @@ $def with (nav, project_form, project, tasks, permissions, categories)
 </head>
 
 <body>
-    
-    $:nav
 
+    $:nav
     $if len(project) and (permissions[0] or project[5] == "open" or session.userid == project[2]) and session.username:
         <h1>Project: $project[3]</h1>
 
@@ -50,7 +49,10 @@ $def with (nav, project_form, project, tasks, permissions, categories)
                                 $:project_form.declined.render()
                         </form>
                 </li>
+
         </ul>
     $else:
-        <p>You do not have permissions to view this project</p>
+        <p >You do not have permissions to view this project</p>
+
+    <p style="color:red;">$:message</p>
 </body>
