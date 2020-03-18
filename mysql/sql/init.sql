@@ -2,7 +2,7 @@
 CREATE TABLE users (
   userid INT UNSIGNED AUTO_INCREMENT,
   username VARCHAR(45) UNIQUE NOT NULL,
-  password VARCHAR(45) NOT NULL,
+  password VARCHAR(150) NOT NULL,
   full_name VARCHAR(200) NOT NULL,
   company VARCHAR(50),
   email VARCHAR(50) NOT NULL,
@@ -12,6 +12,13 @@ CREATE TABLE users (
   postal_code VARCHAR(50),
   country VARCHAR(50),
   PRIMARY KEY (userid)
+);
+
+CREATE TABLE login_attempts (
+  userid INT UNSIGNED UNIQUE NOT NULL,
+  wrong_login_count INT UNSIGNED NOT NULL,
+  PRIMARY KEY (userid),
+  FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
 CREATE TABLE project_category (
@@ -84,7 +91,7 @@ CREATE TABLE log (
 * Initial data
 */
 
-insert into users values (NULL, "admin", "db0d5d67aa805a7be1d05dcc02ca4263", "Admin Modsen", "ntnu", 'mail@ntnu.no', "street", "trondheim", "trondheim", "1234", "norway");
+insert into users values (NULL, "admin", "919b81457aba33dcb89925c49785d76ce1cfdab92b23b718b20e237c6e5b5dc85b26f04951d17dd4b1a67cc9e320608330de264dd55934dbc52e399c742f584a0iiqU", "Admin Modsen", "ntnu", 'mail@ntnu.no', "street", "trondheim", "trondheim", "1234", "norway");
 
 insert into project_category values (NULL, "Gardening");
 insert into project_category values (NULL, "Programming");

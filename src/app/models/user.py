@@ -21,6 +21,27 @@ def get_users():
         cursor.close()
         db.close()
     return users
+def get_salt(username):
+    db.connect()
+    cursor=db.cursor()
+    query = ("SELECT password from users WHERE username =\"" + username + "\"")
+    salt=None
+    try:
+        cursor.execute(query)
+        password_hash = cursor.fetchall()
+        if (len(password_hash)):
+            hash=password_hash[0][0]
+            salt=hash[-5:]
+            #hash_list=hash.split(":")
+            #salt=hash_list[1]
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        cursor.fetchall()
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+    return salt
 
 def set_logger(ipAdress, username, password, dateTime, description):
     """
@@ -156,5 +177,68 @@ def change_password(username, new_password):
     finally:
         cursor.close()
         db.close()
+
+def get_wrong_login_count(userid):
+    db.connect()
+    cursor = db.cursor()
+    query = f"SELECT wrong_login_count from login_attempts WHERE userid ={userid}"
+    #query = ("SELECT wrong_login_count from login_attempts WHERE userid =\"" + userid + "\"")
+    wrong_login_count = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+
+        if len(result):
+            wrong_login_count = result[0][0]
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        cursor.fetchall()
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+    return wrong_login_count
+
+
+def set_wrong_login_count(userid, count, is_init):
+    db.connect()
+    cursor = db.cursor()
+    if is_init:
+        query = f"INSERT INTO login_attempts VALUES ({userid}, {count})"
+    else:
+        query = f"UPDATE login_attempts SET wrong_login_count={count} WHERE userid={userid}"
+    try:
+        cursor.execute(query)
+        db.commit()
+        wrong_login_count = get_wrong_login_count(userid)
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        wrong_login_count = None
+        cursor.fetchall()
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+    return wrong_login_count
+
+def increment_wrong_login_count(userid):
+    db.connect()
+    cursor = db.cursor()
+    query = f"UPDATE login_attempts SET wrong_login_count = wrong_login_count + 1 WHERE userid={userid}"
+    #query = ("UPDATE login_attempts SET wrong_login_count = wrong_login_count + 1 WHERE (userid=\"" + userid + "\")")
+    try:
+        cursor.execute(query)
+        db.commit()
+        wrong_login_count = get_wrong_login_count(userid)
+    except mysql.connector.Error as err:
+        print("Failed executing query: {}".format(err))
+        wrong_login_count = None
+        cursor.fetchall()
+        exit(1)
+    finally:
+        cursor.close()
+        db.close()
+    return wrong_login_count
+
 
 
