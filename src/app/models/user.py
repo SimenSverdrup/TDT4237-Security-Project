@@ -1,5 +1,7 @@
 from models.database import db
 import mysql.connector
+from mysql.connector.cursor import MySQLCursorPrepared
+
 
 def get_users():
     """
@@ -21,19 +23,21 @@ def get_users():
         cursor.close()
         db.close()
     return users
+
+
 def get_salt(username):
     db.connect()
-    cursor=db.cursor()
+    cursor = db.cursor()
     query = ("SELECT password from users WHERE username =\"" + username + "\"")
-    salt=None
+    salt = None
     try:
         cursor.execute(query)
         password_hash = cursor.fetchall()
         if (len(password_hash)):
-            hash=password_hash[0][0]
-            salt=hash[-5:]
-            #hash_list=hash.split(":")
-            #salt=hash_list[1]
+            hash = password_hash[0][0]
+            salt = hash[-5:]
+            # hash_list=hash.split(":")
+            # salt=hash_list[1]
     except mysql.connector.Error as err:
         print("Failed executing query: {}".format(err))
         cursor.fetchall()
@@ -42,6 +46,7 @@ def get_salt(username):
         cursor.close()
         db.close()
     return salt
+
 
 def set_logger(ipAdress, username, password, dateTime, description):
     """
@@ -53,7 +58,7 @@ def set_logger(ipAdress, username, password, dateTime, description):
     query = f"INSERT INTO log VALUES ('{ipAdress}', '{username}', '{password}', '{dateTime}', '{description}')"
     get_query = "Select * from log"
 
-    #query = 'INSERT INTO log values("105601", "warsa", "password", "dateTime", "description")'
+    # query = 'INSERT INTO log values("105601", "warsa", "password", "dateTime", "description")'
     try:
         cursor.execute(query)
         db.commit()
@@ -71,7 +76,6 @@ def set_logger(ipAdress, username, password, dateTime, description):
     return log
 
 
-
 def get_user_id_by_name(username):
     """
     Get the id of the unique username
@@ -79,14 +83,14 @@ def get_user_id_by_name(username):
         :return: The id of the user
     """
     db.connect()
-    cursor = db.cursor()
-    query = ("SELECT userid from users WHERE username =\"" + username + "\"")
-    
+    cursor = db.cursor(buffered=True)
+    query = " SELECT userid from users WHERE username = %s "
+
     userid = None
     try:
-        cursor.execute(query)
+        cursor.execute(query, (username,) )
         users = cursor.fetchall()
-        if(len(users)):
+        if (len(users)):
             userid = users[0][0]
     except mysql.connector.Error as err:
         print("Failed executing query: {}".format(err))
@@ -105,11 +109,11 @@ def get_user_name_by_id(userid):
         :return: The name of the user
     """
     db.connect()
-    cursor = db.cursor()
-    query = ("SELECT username from users WHERE userid =\"" + userid + "\"")
+    cursor = db.cursor(buffered=True)
+    query = ("SELECT username from users WHERE userid = %s")
     username = None
     try:
-        cursor.execute(query)
+        cursor.execute(query, (userid,) )
         users = cursor.fetchall()
         if len(users):
             username = users[0][0]
@@ -134,12 +138,11 @@ def match_user(username, password):
         :return: user
     """
     db.connect()
-    cursor = db.cursor()
-    query = ("SELECT userid, username from users where username = \"" + username + 
-            "\" and password = \"" + password + "\"")
+    cursor = db.cursor(buffered=True)
+    query = "SELECT userid, username from users where username =   %s and password =   %s"
     user = None
     try:
-        cursor.execute(query)
+        cursor.execute(query, (username, password,))
         users = cursor.fetchall()
         if len(users):
             user = users[0]
@@ -160,14 +163,15 @@ def change_password(username, new_password):
             :param new_password: The new password
     """
     userid = get_user_id_by_name(username)
+    print(userid)
 
     db.connect()
     cursor = db.cursor()
 
-    query = ("UPDATE users SET password=\"" + new_password + "\" WHERE userid=" + str(userid))
+    query = "UPDATE users SET password= %s WHERE userid= %s"
 
     try:
-        cursor.execute(query)
+        cursor.execute(query, (new_password, str(userid),))
         db.commit()
     except mysql.connector.Error as err:
         print("ERROR")
@@ -178,11 +182,12 @@ def change_password(username, new_password):
         cursor.close()
         db.close()
 
+
 def get_wrong_login_count(userid):
     db.connect()
     cursor = db.cursor()
     query = f"SELECT wrong_login_count from login_attempts WHERE userid ={userid}"
-    #query = ("SELECT wrong_login_count from login_attempts WHERE userid =\"" + userid + "\"")
+    # query = ("SELECT wrong_login_count from login_attempts WHERE userid =\"" + userid + "\"")
     wrong_login_count = None
     try:
         cursor.execute(query)
@@ -221,11 +226,12 @@ def set_wrong_login_count(userid, count, is_init):
         db.close()
     return wrong_login_count
 
+
 def increment_wrong_login_count(userid):
     db.connect()
     cursor = db.cursor()
     query = f"UPDATE login_attempts SET wrong_login_count = wrong_login_count + 1 WHERE userid={userid}"
-    #query = ("UPDATE login_attempts SET wrong_login_count = wrong_login_count + 1 WHERE (userid=\"" + userid + "\")")
+    # query = ("UPDATE login_attempts SET wrong_login_count = wrong_login_count + 1 WHERE (userid=\"" + userid + "\")")
     try:
         cursor.execute(query)
         db.commit()
@@ -239,6 +245,3 @@ def increment_wrong_login_count(userid):
         cursor.close()
         db.close()
     return wrong_login_count
-
-
-
