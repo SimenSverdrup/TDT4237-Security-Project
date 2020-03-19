@@ -1,6 +1,7 @@
 from models.database import db
 import mysql.connector
 
+
 def get_users():
     """
     Retreive all registrered users from the database
@@ -21,6 +22,8 @@ def get_users():
         cursor.close()
         db.close()
     return users
+
+
 def get_salt(username):
     db.connect()
     cursor=db.cursor()
@@ -42,6 +45,7 @@ def get_salt(username):
         cursor.close()
         db.close()
     return salt
+
 
 def set_logger(ipAdress, username, password, dateTime, description):
     """
@@ -69,7 +73,6 @@ def set_logger(ipAdress, username, password, dateTime, description):
         cursor.close()
         db.close()
     return log
-
 
 
 def get_user_id_by_name(username):
@@ -178,6 +181,7 @@ def change_password(username, new_password):
         cursor.close()
         db.close()
 
+
 def get_wrong_login_count(userid):
     db.connect()
     cursor = db.cursor()
@@ -220,6 +224,7 @@ def set_wrong_login_count(userid, count, is_init):
         cursor.close()
         db.close()
     return wrong_login_count
+
 
 def increment_wrong_login_count(userid):
     db.connect()

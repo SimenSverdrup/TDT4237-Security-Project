@@ -59,14 +59,14 @@ class Login():
         dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         if userid and not user:
             wrong_login_count = models.user.get_wrong_login_count(userid)
-            #making a log for every fail attempt
+            # Making a log for every fail attempt
             userid = models.user.get_user_id_by_name(data.username)
             # if first time wrong password, initialize counter
             if wrong_login_count is None:
                  models.user.set_wrong_login_count(userid, 1, True)
                  log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "Logging failed")
                  return render.login(nav, login_form, "User authentication failed.")
-            #Check if max wrong login attempts is reached
+            # Check if max wrong login attempts is reached
             elif wrong_login_count > 5:
                 log = models.user.set_logger(web.ctx['ip'], data.username, data.password, dt_string, "user blocked")
                 return render.login(nav, login_form, "You've entered the wrong password too many times. Account is blocked.")

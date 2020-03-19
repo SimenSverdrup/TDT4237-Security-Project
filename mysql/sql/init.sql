@@ -2,7 +2,7 @@
 CREATE TABLE users (
   userid INT UNSIGNED AUTO_INCREMENT,
   username VARCHAR(45) UNIQUE NOT NULL,
-  password VARCHAR(150) NOT NULL,
+  password VARCHAR(500) NOT NULL,
   full_name VARCHAR(200) NOT NULL,
   company VARCHAR(50),
   email VARCHAR(50) NOT NULL,
