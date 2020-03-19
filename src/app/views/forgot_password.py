@@ -55,7 +55,10 @@ class Forgot_password:
                 web.sendmail("beelance@ntnu.no", email, "Change password",
                              "Click the link to verify your email and confirm password: " + auth_link +
                              "\nUse temporary password: " + token)
-                return render.forgot_password(nav, forgot_password_form, "Email sent!")
+                return render.forgot_password(nav, forgot_password_form, "Email sent! "
+                                                                         "\nIf no email is received, go to /confirmation"
+                                                                         " and authenticate "
+                                                                        "with the token printed in the terminal.")
 
         except mysql.connector.Error as err:
             print("Failed executing query: {}".format(err))
