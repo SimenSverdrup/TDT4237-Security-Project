@@ -69,4 +69,6 @@ class Register:
         print("token: " + token)
 
         return render.register(nav, register_form, "User registered! Check your email to complete your registration. "
-                                                   "You will not be able to login until you validate your email.")
+                                                   "You will not be able to login until you validate your email. "
+                                                   "\nIf no email is received, go to /confirmation and authenticate "
+                                                   "with the token printed in the terminal.")

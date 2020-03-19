@@ -5,7 +5,7 @@ from models.user import get_users, get_user_id_by_name
 
 # Regex for input validation
 vemail = form.regexp(r".*@.*", "- Must be a valid email address")
-vpass = form.regexp(r".{6,100}$", '- Must be atleast 6 characters long')
+vpass = form.regexp(r".{6,100}$", '- Must be at least 6 characters long')
 number = form.regexp(r"^[0-9]+$", "- Must be a number")
 not_empty = form.regexp(r".+", "- This field is required")
 
@@ -13,7 +13,7 @@ not_empty = form.regexp(r".+", "- This field is required")
 login_form = form.Form(
     form.Textbox("username", description="Username"),
     form.Password("password", description="Password"),
-    form.Checkbox("remember", description= "Remember me", checked=True, value=False),
+    form.Checkbox("remember", description="Remember me", checked=True, value=False),
     form.Button("Log In", type="submit", description="Login"),
 )
 
@@ -36,8 +36,8 @@ register_form = form.Form(
 confirmation_form = form.Form(
     form.Textbox("username", not_empty, description="Username"),
     form.Textbox("temporary_pw", not_empty, description="Temporary password"),
-    form.Textbox("new_pw1", vpass, description="New password"),
-    form.Textbox("new_pw2", vpass, description="Repeat new password"),
+    form.Password("new_pw1", vpass, description="New password"),
+    form.Password("new_pw2", vpass, description="Repeat new password"),
     form.Button("Submit", type="submit", description="Submit")
 )
 
@@ -56,6 +56,7 @@ project_form = form.Form(
     form.Button("accepted", type="submit", value=True, html="Accept Delivery"),
     form.Button("declined", type="submit", value=True, html="Decline Delivery")
 )
+
 
 def get_task_form_elements(identifier=0, task_title="", task_description="", budget=""):
     """
@@ -77,6 +78,7 @@ def get_task_form_elements(identifier=0, task_title="", task_description="", bud
     )
     return task_form_elements
 
+
 def get_project_form_elements(project_title="", project_description="", category_name=""):
     """
     Generate a set of project form elements
@@ -95,6 +97,7 @@ def get_project_form_elements(project_title="", project_description="", category
     form.Dropdown("category_name", description="Category", args=categories)
     )
     return project_form_elements
+
 
 def get_user_form_elements(identifier=0, user_name="", read_permission=True, write_permission=False, modify_permission=False):
     """
@@ -119,14 +122,16 @@ def get_user_form_elements(identifier=0, user_name="", read_permission=True, wri
     )
     return user_form_elements
 
+
 # Define buttons to modify the project form or create a project
-project_buttons =  form.Form(
+project_buttons = form.Form(
     form.Button("add_user", type="submit", description="Add User", value="add_user", html="Add User"),
     form.Button("remove_user", type="submit", description="Remove User", value="remove_user", html="Remove User"),
     form.Button("add_task", type="submit", description="Add Task", value="add_task", html="Add Task"),
     form.Button("remove_task", type="submit", description="Remove Task ", value="remove_task", html="Remove Task"),
     form.Button("create_project", type="submit", description="Create Project", value="create_project", html="Create Project")
 )
+
 
 def get_apply_form():
     """
@@ -140,6 +145,8 @@ def get_apply_form():
         form.Button("apply", type="submit", description="Apply", value="apply", html="Apply")
     )
     return apply_form
+
+
 def get_apply_permissions_form(identifier=0, read_permission="TRUE", write_permission="FALSE", modify_permission="FALSE", userid=None):
     """
     Get the form used to set permissions for each applicant
