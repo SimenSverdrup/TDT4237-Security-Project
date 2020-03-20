@@ -28,7 +28,7 @@ class Confirmation:
         if models.user.match_user(data.username, data.temporary_pw):
             if data.new_pw1 == data.new_pw2:
                 if not confirmation.validates():
-                    return render.register(nav, confirmation_form, "All fields must be valid.")
+                    return render.register(nav, confirmation_form, "Must be at least 12 characters long.")
 
                 alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 chars = []
