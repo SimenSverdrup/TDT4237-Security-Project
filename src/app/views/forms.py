@@ -5,7 +5,7 @@ from models.user import get_users, get_user_id_by_name
 
 # Regex for input validation
 vemail = form.regexp(r".*@.*", "- Must be a valid email address")
-vpass = form.regexp(r".{6,100}$", '- Must be at least 6 characters long')
+vpass = form.regexp(r".{12,100}$", '- Must be at least 12 characters long')
 number = form.regexp(r"^[0-9]+$", "- Must be a number")
 not_empty = form.regexp(r".+", "- This field is required")
 
@@ -28,7 +28,7 @@ register_form = form.Form(
     form.Textbox("state", description="State"),
     form.Textbox("postal_code", number, description="Postal code"),
     form.Textbox("country", description="Country"),
-    form.Password("password", vpass, description="Password"),
+    #form.Password("password", vpass, description="Password"),
     form.Button("Register", type="submit", description="Register")
 )
 
