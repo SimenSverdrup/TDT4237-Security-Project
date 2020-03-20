@@ -38,7 +38,7 @@ class Register:
 
         register = register_form()
         if not register.validates():
-            return render.register(nav, register, "All fields must be valid.")
+            return render.register(nav, register_form, "All fields must be valid.")
 
         # Check if user exists
         if models.user.get_user_id_by_name(data.username):

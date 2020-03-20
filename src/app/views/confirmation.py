@@ -24,20 +24,21 @@ class Confirmation:
         session = web.ctx.session
         nav = get_nav_bar(session)
         data = web.input()
-
+        confirmation = confirmation_form()
         if models.user.match_user(data.username, data.temporary_pw):
             if data.new_pw1 == data.new_pw2:
-                if len(data.new_pw1) > 5:
-                    alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    chars = []
-                    for i in range(5):
-                        chars.append(random.choice(alphabet))
+                if not confirmation.validates():
+                    return render.register(nav, confirmation_form, "All fields must be valid.")
+
+                alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                chars = []
+                for i in range(5):
+                    chars.append(random.choice(alphabet))
                     salt = "".join(chars)
                     new_pw_encrypted = hashlib.sha512(salt.encode('utf-8') + data.new_pw1.encode('utf-8')).hexdigest() + salt
                     models.user.change_password(data.username, new_pw_encrypted)
-                    return render.confirmation(nav, confirmation_form, "Your email has been verified and password updated!")
-                else:
-                    return render.confirmation(nav, confirmation_form, "New password too short! Must be at least 6 characters long.")
+                return render.confirmation(nav, confirmation_form, "Your email has been verified and password updated!")
+
             else:
                 return render.confirmation(nav, confirmation_form, "Password fields not equal!")
         else:
